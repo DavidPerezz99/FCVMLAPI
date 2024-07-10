@@ -1,5 +1,6 @@
 import sqlalchemy
 print(sqlalchemy.__version__)
+print('test')
 from datetime import timedelta, datetime
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
