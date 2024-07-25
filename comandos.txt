@@ -1,0 +1,8 @@
+uvicorn app.main:app --reload
+docker swarm init
+docker stack deploy -c compose-config-swarm.yml my_dl_stack
+docker service ls
+docker service logs my_dl_stack_api -f
+docker service scale my_dl_stack_api=5
+docker stack rm my_dl_stack
+docker swarm leave --force

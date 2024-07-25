@@ -1,36 +1,20 @@
+# Usa una imagen base de Python
+FROM python:3.11-slim
 
-
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/engine/reference/builder/
-
-
-# Install Rust compiler
-
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
-# Prevents Python from writing pyc files.
-
-
-# Keeps Python from buffering stdout and stderr to avoid situations where
-# the application crashes without emitting any logs due to buffering.
-
-
+# Establece el directorio de trabajo en el contenedor
 WORKDIR /app
+
+# Copia el archivo de requisitos y luego instálalos
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia todo el contenido del directorio actual en el contenedor
 COPY . .
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
-# Leverage a bind mount to requirements.txt to avoid having to copy them into
-# into this layer.
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+# Exponer el puerto en el que correrá la aplicación
+EXPOSE 5000
 
-
-
-# Copy the source code into the container.
-
-# Expose the port that the application listens on.
-EXPOSE 8000
-
-# Run the application.
-CMD uvicorn main:app --reload --host 0.0.0.0 --port 8000
-
+# Comando para correr la aplicación
+# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+# CMD [ "python", "routes/predict.py" ]
+CMD ["uvicorn", "app.routes.predict:app2", "--host", "0.0.0.0", "--port", "5000"]
