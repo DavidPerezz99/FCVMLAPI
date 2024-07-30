@@ -1,7 +1,7 @@
 import asyncio
 import httpx
 import time
-from tests.client import get_jwt_token
+from app.tests.client import get_jwt_token
 import json 
 
 
