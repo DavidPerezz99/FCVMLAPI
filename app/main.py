@@ -3,14 +3,14 @@ from pydantic import BaseModel  # type: ignore
 import requests
 import asyncio
 from starlette.middleware.base import BaseHTTPMiddleware  # type: ignore
-from app.database import engine, SessionLocal
+from database import engine, SessionLocal
 from typing import Annotated
 from sqlalchemy.orm import Session  # type: ignore
-from app.routes import auth
-from app.routes.auth import get_current_user
-from app.utils.logger import logger
-from app.utils.middleware import middleware_log
-from app.utils import models
+from routes import auth
+from routes.auth import get_current_user
+from utils.logger import logger
+from utils.middleware import middleware_log
+from utils import models
 
 
 app = FastAPI()

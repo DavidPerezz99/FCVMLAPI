@@ -1,5 +1,5 @@
 from fastapi import Request  # type: ignore
-from app.utils.logger import logger
+from utils.logger import logger
 from datetime import datetime
 import time
 

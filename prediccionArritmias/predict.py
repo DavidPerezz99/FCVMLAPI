@@ -14,8 +14,8 @@ from jose import JWTError, jwt  # type: ignore
 BASE_DIR = Path(__file__).resolve(strict=True).parent
 
 __version__ = "1.0.0"
-# app\models\1\LSTM--1.0.0.h5
-model_path = "app/models/1/LSTM--1.0.0.h5"
+# models\1\LSTM--1.0.0.h5
+model_path = "models/1/LSTM--1.0.0.h5"
 model = load_model(model_path)
 diccionario_clases = {
     0: "Arresto_cardiaco",
