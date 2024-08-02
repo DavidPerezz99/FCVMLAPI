@@ -92,10 +92,8 @@ async def home():
 
 def isValidToken(token: str):
 
-    secret_key = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxODA2Mjk0NCwiaWF0IjoxNzE4MDYyOTQ0fQ.zN9eemsiMb7rGanbHVXumbU5wHJDnDBYg3jp8WoRaAg"
-
     try:
-        decoded_token = jwt.decode(token, secret_key, algorithms=["HS256"])
+        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         print(decoded_token is not None)
         return True
     except JWTError as e:
