@@ -6,6 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm  # type: ignore
 base_url = "http://127.0.0.1:8000"
 predict_url = "http://localhost:5000"
 
+# python app/test/client.py
 
 with open("app/test/input_test.json") as f:
     input_data = json.load(f)

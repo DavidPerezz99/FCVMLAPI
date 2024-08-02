@@ -449,3 +449,4 @@
 2024-08-01 21:37:20,219 , INFO , {'url': '/predict', 'method': 'POST', 'date': '01/08/2024 21:37:20', 'duration': 0.1032724380493164}
 2024-08-01 21:37:34,684 , INFO , {'url': '/auth/token', 'method': 'POST', 'date': '01/08/2024 21:37:34', 'duration': 0.32622313499450684}
 2024-08-01 21:37:34,783 , INFO , {'url': '/predict', 'method': 'POST', 'date': '01/08/2024 21:37:34', 'duration': 0.09083390235900879}
+2024-08-01 21:38:49,320 , INFO , Starting FCV-MLAPI....
