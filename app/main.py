@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status, Depends, HTTPException  # type: ignore
+from fastapi import FastAPI, status, Depends, HTTPException, Request  # type: ignore
 from pydantic import BaseModel  # type: ignore
 import requests
 import asyncio
@@ -11,6 +11,8 @@ from app.routes.auth import get_current_user
 from app.utils.logger import logger
 from app.utils.middleware import middleware_log
 from app.utils import models
+from jose import JWTError, jwt 
+from app.routes.auth import Token, ALGORITHM, SECRET_KEY
 
 
 app = FastAPI()
@@ -29,6 +31,7 @@ def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
+
 
 app.add_middleware(BaseHTTPMiddleware, dispatch=middleware_log)
 
@@ -50,7 +53,7 @@ class PredictionOut(BaseModel):
 
 
 @app.get("/", status_code=status.HTTP_200_OK)
-async def user(user: user_dependency, db: db_dependency):
+async def user(payload: dict):
     """
     Retrieve user information.
 
@@ -64,9 +67,12 @@ async def user(user: user_dependency, db: db_dependency):
     Raises:
     - HTTPException with status code 401 if authentication fails.
     """
-    if user is None:
-        raise HTTPException(status_code=401, detail="Authentication Failed.")
-    return {"User": user}
+    if isValidToken(payload.get('token')) is False:
+        raise HTTPException(status_code=401, detail="Token is not valid.")
+    else:
+        payload = jwt.decode(payload.get('token'),SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get('sub')
+    return {"User": username}
 
 
 @app.get("/home")
@@ -82,15 +88,27 @@ async def home():
     return {"health_check": "OK", "model_version": model_version}
 
 
+
+
+def isValidToken(token: str):
+
+    secret_key = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxODA2Mjk0NCwiaWF0IjoxNzE4MDYyOTQ0fQ.zN9eemsiMb7rGanbHVXumbU5wHJDnDBYg3jp8WoRaAg"
+
+    try:
+        decoded_token = jwt.decode(token, secret_key, algorithms=["HS256"])
+        print(decoded_token is not None)
+        return True
+    except JWTError as e:
+        print(e)
+        return False
+
+
 @app.post("/predict", response_model=PredictionOut)
 async def generate_inference(
-    payload: BatchIn,
-    user: user_dependency,
-    db: db_dependency,
-    status_code=status.HTTP_200_OK,
-):
-    if user is None:
-        raise HTTPException(status_code=401, detail="Authentication Failed.")
+    payload: BatchIn,request: Request):
+    headers = request.headers
+    if isValidToken(headers.get('token')) is False:
+        raise HTTPException(status_code=401, detail="Invalid_Token")
     else:
         data = {
             "idAtencion": payload.idAtencion,
@@ -100,14 +118,14 @@ async def generate_inference(
             }
 
         # inferences = await predict(data)
-        port_HTTP = '5000'
+        port_HTTP = '5001'
         # ip = "127.0.0.1"
-        ip = "localhost"
+        ip = "127.0.0.1"
         uri = ''.join(['http://', ip, ':', port_HTTP, '/models'])
         # print(data)
 
         # Include the JWT token in the request headers
-        headers = {"token": user["token"]}
+        headers = {"token": headers.get('token')}
         # headers = {"token": "asdasd"}
         # print(headers)
 
