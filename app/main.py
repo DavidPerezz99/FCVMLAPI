@@ -3,16 +3,16 @@ from pydantic import BaseModel  # type: ignore
 import requests
 import asyncio
 from starlette.middleware.base import BaseHTTPMiddleware  # type: ignore
-from app.database import engine, SessionLocal
+from database import engine, SessionLocal
 from typing import Annotated
 from sqlalchemy.orm import Session  # type: ignore
-from app.routes import auth
-from app.routes.auth import get_current_user
-from app.utils.logger import logger
-from app.utils.middleware import middleware_log
-from app.utils import models
+from routes import auth
+from routes.auth import get_current_user
+from utils.logger import logger
+from utils.middleware import middleware_log
+from utils import models
 from jose import JWTError, jwt 
-from app.routes.auth import Token, ALGORITHM, SECRET_KEY
+from routes.auth import Token, ALGORITHM, SECRET_KEY
 
 
 app = FastAPI()
@@ -122,15 +122,17 @@ async def generate_inference(
         # ip = "127.0.0.1"
         ip = "127.0.0.1"
         uri = ''.join(['http://', ip, ':', port_HTTP, '/models'])
-        # print(data)
+        print("Data is None: ", data is None)
 
         # Include the JWT token in the request headers
-        headers = {"token": headers.get('token')}
+        headers1 = {"token": headers.get('token')}
         # headers = {"token": "asdasd"}
         # print(headers)
 
         try:
-            inferences = requests.post(uri, json=data, headers=headers)
+            # inferences = requests.post(uri, json=data, headers=headers1)
+            predict_url = "http://127.0.0.1:5001"
+            inferences = requests.get(predict_url + "/")
             # Check if the response status code
             # indicates a client or server error
             if inferences.status_code >= 400:
@@ -142,8 +144,14 @@ async def generate_inference(
                                     detail=error_detail)
         except requests.exceptions.RequestException as e:
             # Handle other request exceptions, such as connection errors
-            raise HTTPException(status_code=503, detail=str(e))
 
+            raise HTTPException(status_code=503, detail={"1":str(e),
+                                                         "2":"Error connecting to model endpoint",
+                                                         "3":"Data is note: " + str(data is None),
+                                                         "headers":headers1,
+                                                         "uri":uri
+                                                         }
+                                )
         # Ensure the response is JSON serializable
         try:
             response_json = inferences.json()

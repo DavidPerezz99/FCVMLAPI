@@ -35,6 +35,9 @@ class BatchIn(BaseModel):
     valor: dict
     fecRegistro: dict
 
+@app2.get("/")
+async def read_root():
+    return {"Home endpoint": "Model Prediction Service running..."}
 
 @app2.post('/models')
 async def predict(request: Request, payload: dict):

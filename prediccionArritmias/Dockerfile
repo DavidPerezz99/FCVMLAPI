@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Exponer el puerto en el que correrá la aplicación
-EXPOSE 5000
+EXPOSE 5001
 
 # Comando para correr la aplicación
-CMD ["uvicorn", "predict:app2", "--host", "0.0.0.0", "--port", "5000"]
+CMD ["uvicorn", "predict:app2", "--host", "0.0.0.0", "--port", "5001"]
