@@ -16,6 +16,7 @@ auth_data = {
     "password": "UIS@123FCV"
 }
 
+
 def get_jwt_token(auth_url, auth_data):
     try:
         response = requests.post(auth_url, data=auth_data)
@@ -44,12 +45,16 @@ response_check = requests.get(predict_url + "/")
 print(response_check.json())
 print("="*50)
 
+print(), print("Checking the health of the main service...")
+response_check = requests.get(base_url + "/home")
+print(response_check.json())
+print("="*50)
 
-response = requests.post(base_url + "/predict",
-                         json=input_data, headers=headers)
-
-# response = requests.post(predict_url + "/models",
+# response = requests.post(base_url + "/predict",
 #                          json=input_data, headers=headers)
+
+response = requests.post(predict_url + "/models",
+                         json=input_data, headers=headers)
 
 
 print(f"Status Code: {response.status_code}")
