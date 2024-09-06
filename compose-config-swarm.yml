@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   api:
-    image: my_dl_image:latest
+    image: api_image:latest
     ports:
-    - "5000:5000"
+    - "5001:5001"
     networks:
     - app-network
     deploy:
@@ -14,8 +14,8 @@ services:
         delay: 10s
       resources:
         limits:
-          cpus: '0.50'
-          memory: 512M
+          cpus: '1'
+          memory: 1024M
       restart_policy:
         condition: on-failure
 

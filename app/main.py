@@ -85,7 +85,7 @@ async def home():
     """
     await asyncio.sleep(0)  # type: ignore
     model_version = "1.0.0"
-    return {"health_check": "OK", "model_version": model_version}
+    return {"health_check": "OK", "model_version1": model_version}
 
 
 
@@ -103,9 +103,8 @@ def isValidToken(token: str):
         return False
 
 
-@app.post("/predict", response_model=PredictionOut)
-async def generate_inference(
-    payload: BatchIn,request: Request):
+@app.post("/predict")  # , response_model=PredictionOut)
+async def generate_inference(payload: BatchIn, request: Request):
     headers = request.headers
     if isValidToken(headers.get('token')) is False:
         raise HTTPException(status_code=401, detail="Invalid_Token")
@@ -132,26 +131,13 @@ async def generate_inference(
         try:
             # inferences = requests.post(uri, json=data, headers=headers1)
             predict_url = "http://127.0.0.1:5001"
-            inferences = requests.get(predict_url + "/")
-            # Check if the response status code
-            # indicates a client or server error
-            if inferences.status_code >= 400:
-                # Extract error detail from the response, if available
-                error_detail = inferences.json().get(
-                    'detail', 'Error connecting to model endpoint'
-                )
-                raise HTTPException(status_code=inferences.status_code,
-                                    detail=error_detail)
+            inferences = requests.post(predict_url + "/models",
+                                       json=data, headers=headers1)
         except requests.exceptions.RequestException as e:
             # Handle other request exceptions, such as connection errors
-
-            raise HTTPException(status_code=503, detail={"1":str(e),
-                                                         "2":"Error connecting to model endpoint",
-                                                         "3":"Data is note: " + str(data is None),
-                                                         "headers":headers1,
-                                                         "uri":uri
-                                                         }
+            raise HTTPException(status_code=503, detail="invalid operation"
                                 )
+
         # Ensure the response is JSON serializable
         try:
             response_json = inferences.json()

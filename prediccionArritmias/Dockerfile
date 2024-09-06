@@ -15,10 +15,10 @@ COPY . .
 EXPOSE 5001
 
 # Establece la variable de entorno con valor por defecto
-ENV UVICORN_WORKERS=4
+# ENV UVICORN_WORKERS=4
 
 # Comando para correr la aplicación usando la variable de entorno
-CMD ["uvicorn", "predict:app2", "--host", "0.0.0.0", "--port", "5001", "--workers", "${UVICORN_WORKERS}"]
+# CMD ["uvicorn", "predict:app2", "--host", "0.0.0.0", "--port", "5001", "--workers", "${UVICORN_WORKERS}"]
 
 # Comando para correr la aplicación
-# CMD ["uvicorn", "predict:app2", "--host", "0.0.0.0", "--port", "5001"]
+CMD ["uvicorn", "predict:app2", "--host", "0.0.0.0", "--port", "5001"]
