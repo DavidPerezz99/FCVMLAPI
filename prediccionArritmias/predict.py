@@ -6,6 +6,8 @@ from pathlib import Path  # type: ignore
 from fastapi import FastAPI, Request, HTTPException, status  # type: ignore
 from pydantic import BaseModel  # type: ignore
 from jose import JWTError, jwt  # type: ignore
+from app.utils.middleware import middleware_log
+from starlette.middleware.base import BaseHTTPMiddleware
 
 # from tensorflow.keras.layers import TSFMLayer
 # data = pd.read_csv("Input_file.csv")
@@ -26,7 +28,7 @@ diccionario_clases = {
 
 
 app2 = FastAPI()
-
+app2.add_middleware(BaseHTTPMiddleware, dispatch=middleware_log)
 
 class BatchIn(BaseModel):
     idAtencion: int
