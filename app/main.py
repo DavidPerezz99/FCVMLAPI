@@ -35,7 +35,7 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 
 app.add_middleware(BaseHTTPMiddleware, dispatch=middleware_log)
 
-logger.info("Starting FCV-MLAPI....")
+logger.info("Starting DMDL_PC_SH_UCI_232...")
 
 
 class BatchIn(BaseModel):
@@ -85,7 +85,7 @@ async def home():
     """
     await asyncio.sleep(0)  # type: ignore
     model_version = "1.0.0"
-    return {"health_check": "OK", "model_version1": model_version}
+    return {"health_check": "OK", "model_version1": model_version, "GUI":"/docs"}
 
 
 
